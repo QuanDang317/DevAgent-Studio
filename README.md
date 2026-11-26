@@ -1,110 +1,112 @@
-# Team AI Studio (`Team-Agents`) — Local-First AI Engineering Workspace
+<div align="center">
 
-**Team AI Studio** là nền tảng đa tác tử (Multi-Agent) chạy cục bộ (**local-first**, không bắt buộc Docker hay database rời, hỗ trợ chạy trực tiếp trên Windows hoặc đóng gói chạy trên Docker khi cần) giúp đội ngũ 5 AI Agent phối hợp **lập trình, đọc hiểu tài liệu (PDF/Word/Excel + Hybrid RAG), phân tích dataset thực tế (DuckDB/Pandas/Charts), nhìn ảnh chụp màn hình (Multimodal Vision), xử lý media tùy chọn** — kèm lớp **phân quyền 3 cấp, Audit Log, Git Diff/Rollback và Automated Test Runner** có thể kiểm soát & kiểm chứng toàn diện.
+# 🚀 DevAgent Studio (Team AI Studio)
 
-> 📘 **Tài liệu nghiên cứu kiến trúc chi tiết toàn bộ dự án, luồng xử lý & các Phase 0–4:** xem tại **[ARCHITECTURE.md](./ARCHITECTURE.md)**.
+**Local-First Multi-Agent AI Engineering Workspace**
+*Phối hợp 5 AI Agent cho Lập trình, Hybrid RAG (PDF/Word/Excel), Phân tích dữ liệu DuckDB, Multimodal Vision & Bảo mật thực thi 3 cấp.*
+
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-WebSocket-009688?style=flat-square&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-19%20%2B%20TypeScript-61DAFB?style=flat-square&logo=react&logoColor=black)
+![SQLite](https://img.shields.io/badge/SQLite-WAL%20%2B%20FTS5-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![DuckDB](https://img.shields.io/badge/DuckDB-In--Memory%20SQL-FFF000?style=flat-square&logo=duckdb&logoColor=black)
+![Gemini](https://img.shields.io/badge/Gemini%20API-Interactions%20%2B%20Vision-4285F4?style=flat-square&logo=google&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Multi--Stage%20Ready-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Tests](https://img.shields.io/badge/Automated%20Tests-47%2F47%20Passing-22C55E?style=flat-square)
+![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-EF4444?style=flat-square)
+
+[📘 Kiến trúc chi tiết (`ARCHITECTURE.md`)](./ARCHITECTURE.md) · [🛡️ Cơ chế Bảo mật](#-bảo-mật--kiểm-soát-thực-thi) · [🤖 Đội ngũ 5 Agents](#-đội-ngũ-5-agent--ma-trận-26-tools)
+
+</div>
 
 ---
 
-## ✨ Năng lực chính (Hoàn thiện đủ Phase 0 → Phase 4)
+> [!NOTE]
+> **Về repository này:** Đây là trang **trưng bày kiến trúc, thiết kế hệ thống và demo** của dự án **DevAgent Studio**. Toàn bộ mã nguồn sản phẩm được quản lý tại repository **Private** (*All Rights Reserved*).
 
-| Nhóm năng lực | Chi tiết tính năng đã triển khai |
+---
+
+## 🎯 Bài toán giải quyết
+
+Thay vì dừng ở một giao diện "nhiều AI chat qua lại với nhau", **DevAgent Studio** được thiết kế như một **AI Engineering Workspace chạy cục bộ (Local-First)** — không bắt buộc Docker hay Database rời (nhưng hỗ trợ đóng gói Docker đầy đủ) — giải quyết trọn vẹn 3 trụ cột công việc kỹ thuật hằng ngày với **khả năng kiểm soát, kiểm thử và hoàn tác (rollback)**:
+
+| Trụ cột | Năng lực cốt lõi |
 | :--- | :--- |
-| **🛡️ Phase 0 — Tin cậy, Bảo mật & Điều phối** | • **Tool Permission Engine 3 cấp (`LOW` / `MEDIUM` / `HIGH`)** thực thi cứng ở backend theo vai trò Agent & `owned_paths`, lưu đầy đủ **Audit Log** đã ẩn bí mật.<br>• **Task-Based Orchestration (`Task Graph + Task Contract`)** & **Adaptive Routing** (tác vụ nhỏ chỉ điều động 1–2 Agent thay vì gọi cả 5).<br>• **SQLite Persistent Job Queue (`bg_worker`)** xử lý tác vụ nặng chạy nền, tự phục hồi job bị gián đoạn khi khởi động lại.<br>• Tùy chọn tách API keys sang vùng bí mật riêng (`%LOCALAPPDATA%\CrewStudio\secrets.env` trên Windows hoặc `/app/data/secrets.env` trong Docker). |
-| **💻 Phase 1 — AI Coding Workspace & Git Safety** | • **Sửa code an toàn (`edit_file`)** kiểm tra `expected_sha256`, khớp duy nhất 1 vị trí, ghi atomic & trả diff; tìm kiếm toàn repo (`grep_search`), đọc theo dòng (`read_file_lines`), soi DB SQLite chỉ đọc (`inspect_sqlite`), test API local (`http_request`).<br>• **Git Worktree + Diff Review + Merge/Discard** và **Git Snapshot & Rollback** 1 click cho chế độ không dùng worktree.<br>• **Automated Test Runner** tự phát hiện `unittest`/`pytest`/`tsc`/`npm test` kèm Windows Job Object chống kẹt tiến trình.<br>• **Project Memory** có `source_ref` + kiểm tra tính mới (`stale`), **Live Web Preview** cô lập (`sandbox="allow-scripts"` + CSP `connect-src 'none'`). |
-| **📚 Phase 2 — Đọc PDF/Word/Excel & Local Hybrid RAG** | • Đọc trực tiếp `.pdf` (kèm phát hiện PDF scan), `.docx`, `.xlsx`, code/Markdown và xuất báo cáo Word `.docx` (`export_docx_report`).<br>• **Local Hybrid RAG trên SQLite**: kết hợp **SQLite FTS5 (BM25)** + **Vector Embedding 768 chiều** (`gemini-embedding-001` MRL → fallback Ollama `nomic-embed-text` → fallback FTS5 offline), gộp điểm **RRF**, **Evidence Gate** chống ảo giác, bọc `<retrieved_context trust="untrusted">` và tab **Kho tri thức (RAG)** trên Run Center. |
-| **📊 Phase 3 — Dataset Engine & Multimodal Vision** | • **Dataset Inspector & DuckDB SQL**: `profile_dataset` (CSV/Excel/Parquet/JSONL gọn nhẹ không tràn token), `query_dataset_sql` (`read_xlsx`/openpyxl fallback, khóa cứng `SET enable_external_access = false;` chống đọc file ngoài), `run_data_script` (Matplotlib `Agg`, tự gom biểu đồ `.png`/`.svg` hiện thẳng trong khung chat).<br>• **Multimodal Vision**: tải lên ảnh chụp màn hình lỗi UI / sơ đồ kiến trúc ngay trên khung chat để Agent nhìn trực tiếp và sửa code. |
-| **🎬 Phase 4 — Optional Media Pack & Workflow Templates** | • **Media tùy chọn**: Chỉnh sửa/nén/ghép ảnh cục bộ bằng **Pillow**, tạo ảnh AI (**Gemini Nano Banana 2.1**), tạo giọng đọc WAV (**Gemini 3.8 Flash TTS**), và **FFmpeg có cấu trúc** (`trim`, `compress`, `extract_audio`, `burn_subtitles`, `slideshow`) tự động nhận diện (không lỗi nếu máy chưa cài `ffmpeg`).<br>• **Workflow Templates**: 5 mẫu quy trình thực chiến sẵn có + tự tạo mẫu riêng, khởi chạy 1 click từ Chat hoặc Run Center. |
+| **💻 AI Software Development** | • Điều phối theo **Task Graph + Task Contract** & **Adaptive Routing** (tác vụ nhỏ chỉ gọi 1–2 Agent).<br>• Sửa code an toàn từng đoạn bằng `edit_file` kiểm tra **`expected_sha256`**, khớp duy nhất & trả unified diff.<br>• **Git Worktree + Diff Review + Merge/Discard** và **Git Snapshot & Rollback** 1 click.<br>• **Automated Test Runner** (`unittest`/`pytest`/`tsc`/`npm test`) gắn Windows Job Object, **Project Memory** tự phát hiện dữ liệu lỗi thời (`stale`), và **Live Web Preview** cô lập CSP. |
+| **📚 Document Intelligence & Hybrid RAG** | • Đọc trực tiếp `.pdf` (kèm phát hiện PDF scan), `.docx`, `.xlsx`, Markdown, mã nguồn và xuất báo cáo Word `.docx`.<br>• **Local Hybrid RAG trên SQLite:** kết hợp **SQLite FTS5 (BM25)** + **Vector Embedding 768 chiều (MRL)** (`gemini-embedding-001` → Ollama → FTS5 offline), hợp nhất **Reciprocal Rank Fusion (RRF)**.<br>• **Evidence Gate** chống bịa đặt, bọc `<retrieved_context trust="untrusted">` và bộ benchmark đo `Recall@K`, `MRR`, latency. |
+| **📊 Data Analytics & Multimodal Vision** | • **Dataset Inspector & DuckDB SQL:** soi cấu trúc `.csv`/`.xlsx`/`.parquet`/`.jsonl` gọn nhẹ (~500 tokens), chạy SQL tốc độ cao với **`SET enable_external_access = false;`** chống đọc file ngoài workspace.<br>• Chạy script phân tích & vẽ biểu đồ **Matplotlib (`Agg`)** tự động hiển thị ảnh biểu đồ inline ngay trong khung chat.<br>• **Multimodal Vision:** đính kèm ảnh chụp màn hình lỗi UI / sơ đồ kiến trúc để Agent nhìn trực tiếp và sửa code. |
+| **🎬 Optional Media & Automation** | • Chỉnh sửa/nén/ghép ảnh cục bộ bằng **Pillow**, tạo ảnh AI (**Gemini Nano Banana 2.1**), tạo giọng đọc WAV (**Gemini 3.8 Flash TTS**), tác vụ **FFmpeg có cấu trúc** (tự động nhận diện) và **Workflow Templates** khởi chạy 1 click. |
 
 ---
 
-## 🚀 Cách chạy nhanh
+## 🏗️ Kiến Trúc Tổng Thể Hệ Thống
 
-### Cách 1: Chạy trực tiếp trên Windows (Mặc định — Nhanh & Nhẹ nhất)
-1. Nháy đúp **`start.bat`** (hoặc chạy `.\start.ps1` trong PowerShell).
-2. Mở trình duyệt tại **http://localhost:8899**.
-3. Bấm biểu tượng **Cài đặt ⚙️** (góc dưới bên trái):
-   - Dán **Gemini API Key** (lấy miễn phí tại https://aistudio.google.com/apikey) vào mục *API Keys* rồi bấm **Lưu**.
-   - *(Tùy chọn)* Thêm **Groq API Key** (https://console.groq.com/keys), **OpenRouter API Key** hoặc **Ollama Local** làm dự phòng.
-   - *(Tùy chọn)* Bật **Chế độ Demo** để trải nghiệm ngay mà chưa cần API key.
-4. Dừng ứng dụng bằng **`stop.bat`**. Nếu có sửa mã nguồn giao diện `frontend/src`, chạy **`rebuild-ui.bat`** để build lại `frontend/dist`.
+```mermaid
+flowchart TD
+    USER["Người dùng (Trình duyệt localhost:8899)"] --> UI["React 19 + TypeScript (Chat, Run Center, Workspace, Kanban, Settings)"]
+    UI -->|HTTP + X-Session-Token / Cookie| API["FastAPI Backend + WebSockets (/ws/events, /ws/terminal)"]
 
-### Cách 2: Chạy bằng Docker (Có sẵn luôn `git` và `ffmpeg` trong container)
-Phù hợp khi bạn muốn cô lập hoàn toàn môi trường thực thi hoặc cần sẵn **FFmpeg** cho tác vụ video/audio:
+    API --> SEC["Security Guard (Host/DNS Rebinding, Session Token, CORS, SSRF)"]
+    SEC --> ORCH["Task-Based Orchestrator (Task Graph, Adaptive Routing, Git Safety, Memory)"]
+    SEC --> WORKER["SQLite Persistent Job Queue & Local Worker (bg_worker)"]
 
-```bash
-# 1. (Tùy chọn) Tạo file .env từ mẫu và điền API key
-copy .env.example .env
+    ORCH --> GW["LLM Gateway (Gemini Interactions Text/Vision, Groq, OpenRouter, Ollama + Quota)"]
+    ORCH --> PERM["Tool Permission Engine 3 Cấp (LOW / MEDIUM / HIGH + Audit Logs)"]
+    WORKER --> PERM
 
-# 2. Build và khởi chạy (chỉ bind về 127.0.0.1:8899 trên máy của bạn)
-docker compose up --build -d
+    PERM --> G1["Code, Git & Test (edit_file SHA-256, grep, Worktree/Snapshot, Test Runner)"]
+    PERM --> G2["Docs & Hybrid RAG (pypdf/docx/xlsx, SQLite FTS5 + 768d Vector RRF)"]
+    PERM --> G3["Data Engine (DuckDB external_access=off, Pandas Profile, Matplotlib Agg)"]
+    PERM --> G4["Optional Media Pack (Pillow, Nano Banana 2.1, Gemini 3.8 TTS, FFmpeg)"]
 
-# 3. Xem log & kiểm tra trạng thái
-docker compose logs -f
-
-# 4. Dừng container (dữ liệu trong ./data và ./workspace vẫn giữ nguyên)
-docker compose down
+    G1 --> DB["SQLite WAL (16 bảng) + Workspace & _uploads/"]
+    G2 --> DB
+    G3 --> DB
+    G4 --> DB
 ```
 
-- Mở trình duyệt tại **http://localhost:8899**.
-- Dữ liệu bền vững được mount ra máy host tại `./data` (SQLite DB + `secrets.env`) và `./workspace` (mã nguồn, tài liệu, file upload).
-- Muốn container gọi **Ollama đang chạy trên máy Windows host**, đặt trong `.env`:
-  ```env
-  OLLAMA_BASE_URL=http://host.docker.internal:11434/v1
-  ALLOW_REMOTE_OLLAMA=1
-  ```
-- Muốn ảnh Docker nhẹ hơn (~150MB) khi không dùng FFmpeg, đổi `INSTALL_FFMPEG: "0"` trong `docker-compose.yml`.
+> 👉 Xem sơ đồ tuần tự (Sequence Diagram), vai trò chi tiết 21 module Backend + 12 module Frontend và cấu trúc 16 bảng SQLite tại **[ARCHITECTURE.md](./ARCHITECTURE.md)**.
 
 ---
 
-## 🧪 Chạy bộ kiểm thử tự động
+## 🤖 Đội Ngũ 5 Agent & Ma Trận 26 Tools
 
-Dự án có bộ **47 bài kiểm thử tự động** (`unittest`, chạy cô lập trên DB/thư mục tạm, không chạm dữ liệu thật) bao phủ bảo mật, Permission Engine, Git Worktree/Snapshot, RAG + Benchmark, DuckDB Isolation, Vision, Media & Templates:
+| Agent | Vai trò | Phạm vi công cụ tiêu biểu |
+| :--- | :--- | :--- |
+| 🧭 **Minh** (`leader`) | Team Leader & Điều phối | Lập kế hoạch, Task Graph, Kanban, `ask_human`, đọc tài liệu/RAG, báo cáo Word |
+| 🔎 **An** (`research`) | Nghiên cứu & Chiến lược | `read_document`, `search_knowledge`, `profile_dataset`, `query_dataset_sql`, `export_docx_report` |
+| ✍️ **Linh** (`content`) | Nội dung & Truyền thông | Soạn thảo Markdown/Word, tra cứu RAG, `generate_image`, `transform_image`, `generate_speech_tts` |
+| 💻 **Kiên** (`coder`) | Kỹ sư Full-Stack & Data | Toàn bộ nhóm Coding (`edit_file`, `grep_search`, `run_tests`, `inspect_sqlite`, `http_request`), `run_data_script`, `run_shell_command`, Media |
+| 🛡️ **Bình** (`reviewer`) | QA & Security Reviewer | Rà soát code/diff, `grep_search`, `run_tests`, `inspect_sqlite`, kiểm chứng dữ liệu & bảo mật |
 
-```powershell
-# Kiểm thử Backend (47 tests)
-$env:PYTHONDONTWRITEBYTECODE="1"
-.\.venv\Scripts\python.exe -B -m unittest -v backend/tests/test_security_and_core.py
+### Cơ chế phân quyền 3 cấp thực thi cứng ở Backend
 
-# Kiểm tra TypeScript & build Frontend
-cd frontend
-npx tsc --noEmit
-npm run build
-```
+| Cấp độ | Chính sách thực thi | Ví dụ Tools |
+| :--- | :--- | :--- |
+| 🟢 **LOW** *(9 tools)* | Tự động thực thi (chỉ đọc) | `list_files`, `read_file`, `read_file_lines`, `grep_search`, `inspect_sqlite`, `read_document`, `search_knowledge`, `profile_dataset`, `project_memory_read` |
+| 🔵 **MEDIUM** *(13 tools)* | Thực thi trong `allowed_tools` & `owned_paths` của Workspace/Worktree | `edit_file`, `write_file`, `run_tests`, `query_dataset_sql`, `export_docx_report`, `transform_image`, `generate_image`, `generate_speech_tts`, `http_request` *(localhost)* |
+| 🔴 **HIGH** *(4 tools)* | **Bắt buộc Human Approval** (tạm dừng Run) + ghi Audit Log | `delete_file`, `run_shell_command` *(nhạy cảm)*, `http_request` *(mạng ngoài)*, `run_data_script`, `process_media_ffmpeg` |
 
 ---
 
-## 📂 Tổng quan cấu trúc thư mục
+## 🛡️ Bảo Mật & Kiểm Chứng Kỹ Thuật
 
-```text
-Team-Agents/
-├── backend/                     # FastAPI, WebSockets, Orchestrator, 26 Tools, RAG, DuckDB, Media
-│   ├── main.py                  # Entrypoint API REST + WebSocket + lifespan worker + static SPA
-│   ├── orchestrator.py          # Task Graph, Adaptive Routing, Git Snapshot/Worktree, Approvals
-│   ├── llm_gateway.py           # Gemini Interactions API (Text/Vision), Groq, OpenRouter, Ollama
-│   ├── permission_engine.py     # Phân quyền Tool 3 cấp (LOW/MEDIUM/HIGH) + Audit Redaction
-│   ├── tools.py                 # Registry 26 Tools & ToolExecutionContext
-│   ├── code_tools.py            # edit_file (SHA-256), read_file_lines, grep, sqlite RO, HTTP
-│   ├── worktree_manager.py      # Git Worktree Diff/Merge & Git Snapshot/Rollback
-│   ├── test_runner.py           # Automated Test Runner + Windows Job Object
-│   ├── doc_parser.py            # Đọc PDF/DOCX/XLSX/Code & xuất báo cáo Word (.docx)
-│   ├── rag_service.py           # Local Hybrid RAG (SQLite FTS5 + 768d Vector RRF + Benchmark)
-│   ├── data_tools.py            # DuckDB SQL (external access off), Pandas Profile, Matplotlib Agg
-│   ├── media_tools.py           # Pillow, Gemini Nano Banana 2.1, Gemini 3.8 TTS, FFmpeg tùy chọn
-│   ├── workflow_templates.py    # 5 mẫu quy trình thực chiến + CRUD
-│   ├── project_memory.py        # Bộ nhớ dự án có kiểm chứng nguồn & phát hiện stale
-│   ├── job_worker.py            # SQLite Persistent Background Job Queue
-│   ├── database.py              # SQLite WAL + 16 bảng & additive migrations
-│   ├── security.py              # Session Token, Host/DNS Rebinding Guard, CORS, Env Sanitizer
-│   ├── ws_manager.py            # WebSocket broadcast manager (per-socket lock & timeout)
-│   ├── terminal_ws.py           # Terminal WebSocket (hỗ trợ kill cây tiến trình giữa chừng)
-│   └── tests/                   # 47 bài test bảo mật, đồng thời, RAG, Data, Media & tích hợp
-├── frontend/                    # React 19 + TypeScript + Vite + Tailwind CSS
-├── data/                        # SQLite DB (team_agents.db) — nằm trong .gitignore
-├── workspace/                   # Thư mục dự án & _uploads/ cho Agent thao tác
-├── Dockerfile                   # Multi-stage build (Node 22 + Python 3.13 + non-root + FFmpeg)
-├── docker-compose.yml           # Cấu hình chạy Docker an toàn bind 127.0.0.1
-├── .dockerignore                # Chặn .env, DB, node_modules, .venv lọt vào Docker image
-├── ARCHITECTURE.md              # Sổ tay kiến trúc, luồng xử lý, vai trò & lịch sử Phase 0–4
-└── start.bat / start.ps1 / stop.bat / rebuild-ui.bat
-```
+- **Xác thực & Chống tấn công web cục bộ:** Bắt buộc `SESSION_TOKEN` hằng thời gian trên mọi endpoint nhạy cảm & WebSocket, kiểm tra `Host` header chống **DNS Rebinding**, chặn **SSRF** nội bộ/metadata IP (`169.254.169.254`), cô lập **Live Web Preview** bằng `<iframe sandbox="allow-scripts">` (không `allow-same-origin`) + header `Content-Security-Policy: ... connect-src 'none'`.
+- **Cô lập dữ liệu & tiến trình:** DuckDB bật `SET enable_external_access = false;`; subprocess dùng `create_subprocess_exec` với env đã xóa API keys + **Windows Job Object** + diệt cây tiến trình `taskkill /T /F`; tùy chọn tách bí mật sang `secrets.env` ngoài thư mục dự án; hỗ trợ **Docker multi-stage non-root**.
+- **Kết quả kiểm định tự động:**
+  - **47 / 47** bài kiểm thử tự động (`unittest` cô lập trên DB/env tạm) **PASS** — bao phủ Security, Permission Engine, Git Worktree & Rollback, Test Runner, Hybrid RAG, DuckDB Isolation, Vision, Media & Workflow Templates.
+  - **Independent QA & Security Audit:** `0` lỗi P0 / P1 / P2.
+  - **RAG Benchmark (tập kiểm thử mẫu):** `Recall@5 = 1.0`, `MRR = 1.0`, độ trễ trung bình `~12ms` (SQLite FTS5 + NumPy 768d).
+
+---
+
+## 📸 Giao Diện & Demo Thực Tế
+
+> 💡 *Đang cập nhật ảnh chụp màn hình & video demo thực tế (Phòng họp 5 Agent + Vision, Run Center 7 sub-tabs, Dataset Inspector DuckDB, Live HTML Preview).*
+
+---
+
+## 📄 Bản Quyền
+
+**Copyright © 2026 QuanDang317 — All Rights Reserved.**
+Mã nguồn đầy đủ không được công khai tại repository này. Mọi nhu cầu trao đổi kỹ thuật hoặc xem bản demo trực tiếp vui lòng liên hệ trực tiếp tác giả.
