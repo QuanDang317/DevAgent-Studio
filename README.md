@@ -102,7 +102,14 @@ flowchart TD
 
 ## 📸 Giao Diện & Demo Thực Tế
 
-> 💡 *Đang cập nhật ảnh chụp màn hình & video demo thực tế (Phòng họp 5 Agent + Vision, Run Center 7 sub-tabs, Dataset Inspector DuckDB, Live HTML Preview).*
+### 1. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
+![Phòng họp chung Multi-Agent](./media/chat-workspace.jpg)
+
+### 2. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
+![Workspace và Terminal tích hợp](./media/workspace-terminal.png)
+
+### 3. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
+![Quota và Hiệu suất](./media/quota-dashboard.png)
 
 ---
 
