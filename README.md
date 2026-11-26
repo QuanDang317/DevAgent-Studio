@@ -102,13 +102,19 @@ flowchart TD
 
 ## 📸 Giao Diện & Demo Thực Tế
 
-### 1. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
+### 1. Run Center — Audit Log 3 Cấp (`LOW / MEDIUM / HIGH`), Timeline & Token/Cost
+![Run Center Audit Log](./media/run-center-audit-log.jpg)
+
+### 2. Multi-Agent Thực Thi Chuỗi 4 Tool & Tạo File Artifacts Trực Tiếp Trong Chat
+![Agent tạo file artifacts](./media/agent-artifacts-chat.jpg)
+
+### 3. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
 ![Phòng họp chung Multi-Agent](./media/chat-workspace.jpg)
 
-### 2. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
+### 4. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
 ![Workspace và Terminal tích hợp](./media/workspace-terminal.png)
 
-### 3. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
+### 5. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
 ![Quota và Hiệu suất](./media/quota-dashboard.png)
 
 ---
