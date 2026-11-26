@@ -108,13 +108,16 @@ flowchart TD
 ### 2. Multi-Agent Thực Thi Chuỗi 4 Tool & Tạo File Artifacts Trực Tiếp Trong Chat
 ![Agent tạo file artifacts](./media/agent-artifacts-chat.jpg)
 
-### 3. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
+### 3. Dataset Inspector (DuckDB Schema, Thống Kê Cột & SQL Trực Tiếp)
+![Dataset Inspector DuckDB](./media/dataset-inspector.png)
+
+### 4. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
 ![Phòng họp chung Multi-Agent](./media/chat-workspace.jpg)
 
-### 4. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
+### 5. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
 ![Workspace và Terminal tích hợp](./media/workspace-terminal.png)
 
-### 5. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
+### 6. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
 ![Quota và Hiệu suất](./media/quota-dashboard.png)
 
 ---
