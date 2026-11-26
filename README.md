@@ -108,16 +108,20 @@ flowchart TD
 ### 2. Multi-Agent Thực Thi Chuỗi 4 Tool & Tạo File Artifacts Trực Tiếp Trong Chat
 ![Agent tạo file artifacts](./media/agent-artifacts-chat.jpg)
 
-### 3. Dataset Inspector (DuckDB Schema, Thống Kê Cột & SQL Trực Tiếp)
-![Dataset Inspector DuckDB](./media/dataset-inspector.png)
+### 3. Kho Tri Thức Cục Bộ — Local Hybrid RAG (SQLite FTS5 + Embedding 768d)
+![Kho tri thức Hybrid RAG](./media/rag-knowledge.jpg)
 
-### 4. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
+### 4. Dataset Inspector & Truy Vấn SQL Nhanh Bằng DuckDB (`44 ms`)
+![Dataset Inspector DuckDB](./media/dataset-inspector.png)
+![Truy vấn SQL DuckDB](./media/duckdb-sql-query.png)
+
+### 5. Phòng Họp Chung Multi-Agent, Mẫu Quy Trình & Worktree Cô Lập
 ![Phòng họp chung Multi-Agent](./media/chat-workspace.jpg)
 
-### 5. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
+### 6. Workspace Editor & Terminal Tích Hợp (Đã Xác Thực Phiên & Ẩn API Keys)
 ![Workspace và Terminal tích hợp](./media/workspace-terminal.png)
 
-### 6. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
+### 7. Bảng Điều Khiển Quota, Hiệu Suất & Tạm Dừng Khẩn Cấp
 ![Quota và Hiệu suất](./media/quota-dashboard.png)
 
 ---
