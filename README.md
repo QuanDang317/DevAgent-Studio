@@ -15,7 +15,7 @@
 ![Tests](https://img.shields.io/badge/Automated%20Tests-47%2F47%20Passing-22C55E?style=flat-square)
 ![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-EF4444?style=flat-square)
 
-[📘 Kiến trúc chi tiết (`ARCHITECTURE.md`)](./ARCHITECTURE.md) · [🛡️ Cơ chế Bảo mật](#-bảo-mật--kiểm-soát-thực-thi) · [🤖 Đội ngũ 5 Agents](#-đội-ngũ-5-agent--ma-trận-26-tools)
+[📘 Kiến trúc chi tiết (`ARCHITECTURE.md`)](./ARCHITECTURE.md) · [✨ Danh mục Tính năng (`FEATURES.md`)](./FEATURES.md) · [📝 Lịch sử Phiên bản (`CHANGELOG.md`)](./CHANGELOG.md)
 
 </div>
 
@@ -113,7 +113,21 @@ flowchart TD
 
 ---
 
-## 📄 Bản Quyền
+## 🧠 Technical Challenges & Engineering Decisions (Trade-offs)
 
-**Copyright © 2026 QuanDang317 — All Rights Reserved.**
-Mã nguồn đầy đủ không được công khai tại repository này. Mọi nhu cầu trao đổi kỹ thuật hoặc xem bản demo trực tiếp vui lòng liên hệ trực tiếp tác giả.
+| Thách thức kỹ thuật | Quyết định kiến trúc & Lý do lựa chọn |
+| :--- | :--- |
+| **1. Làm sao có Hybrid RAG mạnh mà không bắt người dùng cài Docker / Vector DB rời?** | Kết hợp **SQLite FTS5 (BM25)** có sẵn trong Python với **Embedding 768 chiều (MRL)** lưu dạng `float32` BLOB + tính cosine bằng **NumPy** và hợp nhất **RRF**. Với quy mô cá nhân/repo vừa (< 50.000 chunks), dung lượng RAM chỉ ~146 MiB (thay vì ~586 MiB ở 3072d), vẫn chạy offline 100% bằng FTS5 nếu không có API key. |
+| **2. Ngăn LLM ghi đè nhầm code hoặc phá hỏng dự án khi nhiều Agent cùng làm việc?** | Thay vì chỉ có `write_file` ghi đè cả file, triển khai `edit_file(path, old_text, new_text, expected_sha256)` yêu cầu khớp hash SHA-256 + khớp duy nhất 1 vị trí + ghi atomic; kết hợp **Git Worktree** hoặc **Git Snapshot/Rollback** tự động trước mỗi Run. |
+| **3. Làm sao cho AI chạy SQL DuckDB trên CSV/Excel nhưng không đọc lén `.env` hay file hệ thống?** | Nạp riêng tệp trong workspace đã qua `_resolve_safe_path` vào bảng in-memory `data` trước, sau đó khóa cứng **`SET enable_external_access = false;`** và chỉ cho phép câu lệnh chỉ đọc (`SELECT`/`WITH`/`SUMMARIZE`) trước khi thực thi truy vấn của Agent. |
+| **4. Chặn Prompt Injection từ tài liệu PDF/Word/Web buộc Agent chạy lệnh phá hoại?** | Không dựa vào mỗi System Prompt: mọi lời gọi tool đi qua **Tool Permission Engine 3 cấp** thực thi cứng ở backend (`allowed_tools`, `owned_paths`, `max_tool_calls`, bắt buộc Human Approval cho cấp `HIGH`), ghi **Audit Log** đã ẩn bí mật, và cô lập Web Preview bằng `<iframe sandbox="allow-scripts">` (cấm `allow-same-origin`) + CSP `connect-src 'none'`. |
+| **5. Tránh treo Event Loop FastAPI & zombie process trên Windows?** | Đẩy toàn bộ Git subprocess, RAG indexing, DuckDB và tác vụ dài sang **SQLite Persistent Job Queue (`bg_worker`)** & `asyncio.to_thread`; gắn **Windows Job Object** (`KILL_ON_JOB_CLOSE`) + `taskkill /T /F` và tách coroutine đọc WebSocket để nút Stop dừng tiến trình ngay lập tức. |
+
+---
+
+## 🔒 Source Code Availability
+
+**DevAgent Studio** is a privately developed AI engineering project.
+This public repository serves as a **technical portfolio and product showcase**, featuring system architecture ([ARCHITECTURE.md](./ARCHITECTURE.md)), feature status ([FEATURES.md](./FEATURES.md)), release history ([CHANGELOG.md](./CHANGELOG.md)), engineering decisions, and UI demonstrations.
+
+The implementation source code is maintained in a **private repository** and is not publicly distributed (**Copyright © 2026 QuanDang317 — All Rights Reserved**). Technical discussions and live project demonstrations are welcome.
